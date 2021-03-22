@@ -34,7 +34,7 @@ export const deleteTodo = createAsyncThunk(
 
   async (id,thunkApi) => {
     try {
-      await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+      await fetch(`https://jsonplwaceholder.typicode.com/todos/${id}`, {
         method: 'DELETE'
       })
       return id
@@ -78,6 +78,10 @@ const todosSlice = createSlice({
     },
 
     [deleteTodo.rejected]: (state, action) => {
+      const delTodo = state.items.findIndex(item => {
+        return action.meta.arg === item.id
+      })
+      state.items[delTodo].deleting = false
       state.error = action.payload
     },
 
