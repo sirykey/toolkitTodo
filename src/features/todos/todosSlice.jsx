@@ -32,14 +32,14 @@ export const checkTodo = createAsyncThunk(
 export const deleteTodo = createAsyncThunk(
   'todos/deleteTodos',
 
-  async (id) => {
+  async (id,thunkApi) => {
     try {
-      await fetch(`https://jsodnplaceholder.typicode.com/todos/${id}`, {
+      await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
         method: 'DELETE'
       })
       return id
     } catch (e) {
-      return alert('hi')
+      return thunkApi.rejectWithValue(alert('error'))
     }
   }
 )
@@ -49,6 +49,7 @@ const todosSlice = createSlice({
   initialState: {
     items: [],
     loading: false,
+    deleting: false,
     error: null
   },
   reducers: {
@@ -61,6 +62,12 @@ const todosSlice = createSlice({
     [fetchTodos.fulfilled]: (state, action) => {
       state.items = action.payload
       state.loading = false
+    },
+    [deleteTodo.pending]: (state, action) => {
+      const index = state.items.findIndex(item => {
+        return action.meta.arg ===item.id
+      })
+      state.items[index].deleting = !state.items[index].deleting
     },
     [deleteTodo.fulfilled]: (state, action) => {
       const index = state.items.findIndex((item) => {

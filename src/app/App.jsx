@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkTodo, deleteTodo, fetchTodos } from '../features/todos/todosSlice'
 import  '../style.css'
+import ReactLoading from 'react-loading'
 
 function App (props) {
   const dispatch = useDispatch()
@@ -28,7 +29,10 @@ function App (props) {
                  checked={todo.completed}
                  onChange={() => {handleCheck(todo.id, todo.completed)}}
           />
-          <button onClick={() =>{handleDelete(todo.id)}}>Delete</button>
+          <div onClick={() => {handleDelete(todo.id)}}>
+            {todo.deleting? <ReactLoading type='spin' color='blue' height={20} width={20}/> : <button
+              >delete</button>}
+          </div>
           <div className='todo'>{todo.title}</div>
         </div>
       })}
